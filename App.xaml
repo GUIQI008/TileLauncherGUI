@@ -1,0 +1,22 @@
+﻿<Application x:Class="TileLauncherGUI.App"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:hc="https://handyorg.github.io/handycontrol"
+             StartupUri="MainWindow.xaml">
+    
+
+    <Application.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <!-- 修改这里：将 SkinDefault 改为 SkinDark -->
+                <ResourceDictionary Source="pack://application:,,,/HandyControl;component/Themes/SkinDark.xaml"/>
+                <ResourceDictionary Source="pack://application:,,,/HandyControl;component/Themes/Theme.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
+
+            <!-- 补充：为了让暗色模式下文字更清晰，覆盖一下默认画刷（可选，HandyControl通常会自动处理） -->
+            <SolidColorBrush x:Key="RegionBrush" Color="#1E1E1E"/>
+            <SolidColorBrush x:Key="SecondaryRegionBrush" Color="#252526"/>
+            <SolidColorBrush x:Key="PrimaryTextBrush" Color="#FFFFFF"/>
+        </ResourceDictionary>
+    </Application.Resources>
+</Application>

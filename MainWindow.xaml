@@ -1,0 +1,371 @@
+﻿<hc:Window x:Class="TileLauncherGUI.MainWindow"
+           xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+           xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+           xmlns:hc="https://handyorg.github.io/handycontrol"
+           Title="TileGenerator" Height="850" Width="1100"
+           WindowStartupLocation="CenterScreen"
+           Background="{DynamicResource RegionBrush}">
+
+    <hc:Window.Resources>
+        <Style TargetType="TextBlock" BasedOn="{StaticResource TextBlockDefault}">
+            <Setter Property="VerticalAlignment" Value="Center"/>
+        </Style>
+
+        <!-- 预览按钮样式 -->
+        <Style x:Key="TilePreviewBtn" TargetType="Button">
+            <Setter Property="BorderThickness" Value="2"/>
+            <Setter Property="BorderBrush" Value="#33FFFFFF"/>
+            <Setter Property="Padding" Value="0"/>
+            <Setter Property="Background" Value="#11FFFFFF"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border x:Name="bd" Background="{TemplateBinding Background}" 
+                                BorderBrush="{TemplateBinding BorderBrush}" 
+                                BorderThickness="{TemplateBinding BorderThickness}" 
+                                CornerRadius="4">
+                            <Grid>
+                                <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                            </Grid>
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+    </hc:Window.Resources>
+
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="240"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+
+        <!-- 左侧导航 -->
+        <Border Background="{DynamicResource RegionBrush}" BorderThickness="0,0,1,0" BorderBrush="{DynamicResource BorderBrush}">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+
+                <TextBlock Text="TILE GENERATOR" FontWeight="Bold" FontSize="18" HorizontalAlignment="Center" Margin="0,20,0,20" Foreground="{DynamicResource PrimaryBrush}"/>
+
+                <!-- 统一使用 SelectionChanged 事件，去掉了单项的 Selected 事件以防报错 -->
+                <ListBox x:Name="NavList" Grid.Row="1" SelectionChanged="NavList_SelectionChanged" BorderThickness="0" Background="Transparent">
+                    <ListBoxItem IsSelected="True" Height="50" Tag="Single">
+                        <StackPanel Orientation="Horizontal">
+                            <hc:UniformSpacingPanel Spacing="10">
+                                <TextBlock Text="&#xE80F;" FontFamily="Segoe MDL2 Assets" FontSize="16" VerticalAlignment="Center" Foreground="{DynamicResource PrimaryTextBrush}"/>
+                                <TextBlock Text="单应用模式" FontSize="14"/>
+                            </hc:UniformSpacingPanel>
+                        </StackPanel>
+                    </ListBoxItem>
+                    <ListBoxItem Height="50" Tag="Puzzle">
+                        <StackPanel Orientation="Horizontal">
+                            <hc:UniformSpacingPanel Spacing="10">
+                                <TextBlock Text="&#xE74C;" FontFamily="Segoe MDL2 Assets" FontSize="16" VerticalAlignment="Center" Foreground="{DynamicResource PrimaryTextBrush}"/>
+                                <TextBlock Text="拼图模式" FontSize="14"/>
+                            </hc:UniformSpacingPanel>
+                        </StackPanel>
+                    </ListBoxItem>
+                    <ListBoxItem Height="50" Tag="Manage">
+                        <StackPanel Orientation="Horizontal">
+                            <hc:UniformSpacingPanel Spacing="10">
+                                <TextBlock Text="&#xE713;" FontFamily="Segoe MDL2 Assets" FontSize="16" VerticalAlignment="Center" Foreground="{DynamicResource PrimaryTextBrush}"/>
+                                <TextBlock Text="磁贴管理" FontSize="14"/>
+                            </hc:UniformSpacingPanel>
+                        </StackPanel>
+                    </ListBoxItem>
+                    <ListBoxItem Height="50" Tag="About">
+                        <StackPanel Orientation="Horizontal">
+                            <hc:UniformSpacingPanel Spacing="10">
+                                <TextBlock Text="&#xE946;" FontFamily="Segoe MDL2 Assets" FontSize="16" VerticalAlignment="Center" Foreground="{DynamicResource PrimaryTextBrush}"/>
+                                <TextBlock Text="关于应用" FontSize="14"/>
+                            </hc:UniformSpacingPanel>
+                        </StackPanel>
+                    </ListBoxItem>
+                </ListBox>
+
+                <Image Grid.Row="3" 
+                       Source="/Resources/290484.png"
+                       Stretch="Uniform" 
+                       VerticalAlignment="Bottom" 
+                       Opacity="0.8"
+                       Margin="0,0,0,0"
+                       MaxHeight="400">
+                </Image>
+            </Grid>
+        </Border>
+
+        <!-- 右侧内容区 -->
+        <Border Grid.Column="1" Padding="20">
+            <Grid>
+                <!-- 页面1：单应用生成 -->
+                <ScrollViewer x:Name="ViewSingleApp" Visibility="Visible">
+                    <StackPanel>
+                        <TextBlock Text="单应用磁贴配置" FontSize="22" FontWeight="Bold" Margin="0,0,0,15"/>
+                        <hc:Card BorderThickness="0" Effect="{DynamicResource EffectShadow2}" Margin="0,0,0,15" Background="{DynamicResource SecondaryRegionBrush}">
+                            <StackPanel Margin="15">
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition/>
+                                        <ColumnDefinition Width="15"/>
+                                        <ColumnDefinition/>
+                                    </Grid.ColumnDefinitions>
+                                    <hc:TextBox x:Name="TxtAppId" hc:InfoElement.Title="应用 ID (仅限英文数字)" />
+                                    <hc:TextBox x:Name="TxtDisplayName" Grid.Column="2" hc:InfoElement.Title="显示名称" hc:InfoElement.Placeholder="留空则隐藏名称"/>
+                                </Grid>
+                                <hc:SearchBar x:Name="TxtTargetPath" Margin="0,10,0,0" hc:InfoElement.Title="目标程序路径 或 Steam ID" hc:InfoElement.Placeholder="选择 Exe，或者输入 Steam 数字 ID" Style="{StaticResource SearchBarPlus}" SearchStarted="BtnSelectTarget_Click"/>
+                            </StackPanel>
+                        </hc:Card>
+                        <hc:Card BorderThickness="0" Effect="{DynamicResource EffectShadow2}" Margin="0,0,0,15" Background="{DynamicResource SecondaryRegionBrush}">
+                            <StackPanel Margin="15">
+                                <hc:Divider Content="图片资源配置" LineStroke="{DynamicResource BorderBrush}"/>
+                                <Grid Margin="0,5,0,0">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="Auto"/>
+                                    </Grid.ColumnDefinitions>
+                                    <StackPanel VerticalAlignment="Center">
+                                        <StackPanel Orientation="Horizontal" Margin="0,10,0,0" Height="121">
+                                            <Button x:Name="BtnSetImg" Content="选择图片" Click="BtnSetImg_Click" Style="{StaticResource ButtonPrimary}" Width="97" Margin="0,0,10,0" IsEnabled="False" VerticalAlignment="Center" Height="47"/>
+                                            <Button x:Name="BtnRemoveImg" Content="移除" Click="BtnRemoveImg_Click" Style="{StaticResource ButtonDashedDanger}" IsEnabled="False" Width="96" VerticalAlignment="Center" Height="48"/>
+                                        </StackPanel>
+                                    </StackPanel>
+                                    <Border Grid.Column="1" Background="#11000000" CornerRadius="8" Padding="15" Margin="20,0,0,0">
+                                        <Grid>
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="120"/>
+                                                <ColumnDefinition Width="8"/>
+                                                <ColumnDefinition Width="120"/>
+                                            </Grid.ColumnDefinitions>
+                                            <Button x:Name="BtnImgLarge" Grid.Column="0" Width="120" Height="120" VerticalAlignment="Top" Click="BtnTileSelect_Click" Tag="Large" Style="{StaticResource TilePreviewBtn}">
+                                                <Button.Background>
+                                                    <ImageBrush Stretch="UniformToFill"/>
+                                                </Button.Background>
+                                            </Button>
+                                            <Grid Grid.Column="2">
+                                                <Grid.RowDefinitions>
+                                                    <RowDefinition Height="56"/>
+                                                    <RowDefinition Height="8"/>
+                                                    <RowDefinition Height="56"/>
+                                                </Grid.RowDefinitions>
+                                                <Button x:Name="BtnImgWide" Grid.Row="0" Width="120" Height="56" Click="BtnTileSelect_Click" Tag="Wide" Style="{StaticResource TilePreviewBtn}">
+                                                    <Button.Background>
+                                                        <ImageBrush Stretch="UniformToFill"/>
+                                                    </Button.Background>
+                                                </Button>
+                                                <Grid Grid.Row="2">
+                                                    <Grid.ColumnDefinitions>
+                                                        <ColumnDefinition Width="56"/>
+                                                        <ColumnDefinition Width="8"/>
+                                                        <ColumnDefinition Width="56"/>
+                                                    </Grid.ColumnDefinitions>
+                                                    <Button x:Name="BtnImgMaster" Grid.Column="0" Width="56" Height="56" Click="BtnTileSelect_Click" Tag="Master" Style="{StaticResource TilePreviewBtn}">
+                                                        <Button.Background>
+                                                            <ImageBrush Stretch="UniformToFill"/>
+                                                        </Button.Background>
+                                                    </Button>
+                                                    <Button x:Name="BtnImgSmall" Grid.Column="2" Width="26" Height="26" VerticalAlignment="Top" HorizontalAlignment="Right" Click="BtnTileSelect_Click" Tag="Small" Style="{StaticResource TilePreviewBtn}">
+                                                        <Button.Background>
+                                                            <ImageBrush Stretch="UniformToFill"/>
+                                                        </Button.Background>
+                                                    </Button>
+                                                </Grid>
+                                            </Grid>
+                                        </Grid>
+                                    </Border>
+                                </Grid>
+                            </StackPanel>
+                        </hc:Card>
+                        <hc:Card BorderThickness="0" Effect="{DynamicResource EffectShadow2}" Background="{DynamicResource SecondaryRegionBrush}">
+                            <StackPanel Margin="15">
+                                <hc:Divider Content="动态轮播 (Live Tile)" LineStroke="{DynamicResource BorderBrush}"/>
+                                <Grid Margin="0,5,0,0">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition/>
+                                        <ColumnDefinition Width="Auto"/>
+                                    </Grid.ColumnDefinitions>
+                                    <StackPanel>
+                                        <CheckBox x:Name="ChkEnableLive" Content="启用动态轮播" IsChecked="False"/>
+                                        <ListBox x:Name="ListLiveImages" Height="80" Margin="0,10,0,0" Background="{DynamicResource RegionBrush}" BorderThickness="1" BorderBrush="{DynamicResource BorderBrush}"/>
+                                    </StackPanel>
+                                    <StackPanel Grid.Column="1" Margin="15,0,0,0" VerticalAlignment="Bottom">
+                                        <Button Content="添加" Click="BtnAddLive_Click" Margin="0,0,0,5" Width="100"/>
+                                        <Button Content="清空" Click="BtnClearLive_Click" Width="100"/>
+                                    </StackPanel>
+                                </Grid>
+                            </StackPanel>
+                        </hc:Card>
+                        <StackPanel Margin="0,20,0,0">
+                            <Button x:Name="BtnGenerate" Content="编译并注册应用" Click="BtnGenerate_Click" Style="{StaticResource ButtonPrimary}" Height="50" FontSize="16"/>
+                            <StackPanel x:Name="PanelSingleProgress" Visibility="Collapsed" Margin="0,15,0,0">
+                                <Grid>
+                                    <ProgressBar Height="20" Style="{StaticResource ProgressBarInfo}" IsIndeterminate="True"/>
+                                    <TextBlock Text="正在编译与注册..." HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="Black" FontSize="12"/>
+                                </Grid>
+                            </StackPanel>
+                        </StackPanel>
+                    </StackPanel>
+                </ScrollViewer>
+
+                <!-- 页面2：拼图生成器 -->
+                <ScrollViewer x:Name="ViewPuzzle" Visibility="Collapsed">
+                    <StackPanel>
+                        <TextBlock Text="混合拼图生成器" FontSize="22" FontWeight="Bold" Margin="0,0,0,15"/>
+                        <hc:Card BorderThickness="0" Effect="{DynamicResource EffectShadow2}" Background="{DynamicResource SecondaryRegionBrush}" Margin="0,0,0,15">
+                            <StackPanel Margin="15">
+                                <hc:Divider Content="网格设置" LineStroke="{DynamicResource BorderBrush}"/>
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition/>
+                                        <ColumnDefinition Width="15"/>
+                                        <ColumnDefinition/>
+                                    </Grid.ColumnDefinitions>
+                                    <hc:TextBox x:Name="TxtPuzzlePrefix" hc:InfoElement.Title="ID 前缀" Text="MyPuzzle"/>
+                                    <StackPanel Grid.Column="2">
+                                        <StackPanel Orientation="Horizontal">
+                                            <hc:NumericUpDown x:Name="NumRows" Value="4" Minimum="1" Maximum="6" ValueChanged="PuzzleConfig_Changed" Width="80"/>
+                                            <TextBlock Text=" X " VerticalAlignment="Center" Margin="5"/>
+                                            <hc:NumericUpDown x:Name="NumCols" Value="4" Minimum="1" Maximum="6" ValueChanged="PuzzleConfig_Changed" Width="80"/>
+                                        </StackPanel>
+                                    </StackPanel>
+                                </Grid>
+                                <Button Content="加载底图" Click="BtnSelectPuzzleImage_Click" Style="{StaticResource ButtonInfo}" HorizontalAlignment="Center" Width="150" Margin="0,15,0,0"/>
+                            </StackPanel>
+                        </hc:Card>
+                        <hc:Card BorderThickness="0" Effect="{DynamicResource EffectShadow2}" Background="{DynamicResource SecondaryRegionBrush}">
+                            <StackPanel Margin="15">
+                                <hc:Divider Content="交互区域" LineStroke="{DynamicResource BorderBrush}"/>
+                                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,0,0,10">
+                                    <RadioButton x:Name="RadioPlaceMid" Content="中 (1x1)" GroupName="PuzzleMode" IsChecked="True" Margin="0,0,10,0"/>
+                                    <RadioButton x:Name="RadioPlaceWide" Content="宽 (2x1)" GroupName="PuzzleMode" Margin="0,0,10,0"/>
+                                    <RadioButton x:Name="RadioPlaceLarge" Content="大 (2x2)" GroupName="PuzzleMode" Margin="0,0,10,0"/>
+                                    <RadioButton x:Name="RadioDelete" Content="删除" GroupName="PuzzleMode" Foreground="Red"/>
+                                </StackPanel>
+                                <Border x:Name="PuzzleBorder" Width="500" BorderBrush="{DynamicResource BorderBrush}" BorderThickness="1" HorizontalAlignment="Center" VerticalAlignment="Top" Background="#11000000" ClipToBounds="True">
+                                    <Grid x:Name="GridPuzzleContainer">
+                                        <Canvas>
+                                            <Image x:Name="ImgPuzzlePreview" Stretch="None"/>
+                                        </Canvas>
+                                        <Grid x:Name="GridPuzzleInteractive" Background="Transparent" MouseLeftButtonDown="GridPuzzleInteractive_MouseDown"/>
+                                    </Grid>
+                                </Border>
+                                <TextBlock x:Name="TxtPuzzleStats" Text="当前: 0 个磁贴" HorizontalAlignment="Center" Opacity="0.5" Margin="0,5,0,0"/>
+                            </StackPanel>
+                        </hc:Card>
+                        <StackPanel Margin="0,20,0,0">
+                            <Button x:Name="BtnGeneratePuzzle" Content="生成拼图" Click="BtnGeneratePuzzle_Click" Style="{StaticResource ButtonPrimary}" Height="50" FontSize="16"/>
+                            <StackPanel x:Name="PanelProgress" Visibility="Collapsed" Margin="0,15,0,0">
+                                <Grid>
+                                    <ProgressBar x:Name="ProgressPuzzle" Height="20" Style="{StaticResource ProgressBarSuccess}" Maximum="100" Value="0"/>
+                                    <TextBlock x:Name="TxtProgressStatus" Text="处理中..." HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="Black" FontSize="12"/>
+                                </Grid>
+                            </StackPanel>
+                        </StackPanel>
+                    </StackPanel>
+                </ScrollViewer>
+
+                <!-- 页面3：磁贴管理 -->
+                <Grid x:Name="ViewManage" Visibility="Collapsed">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
+
+                    <StackPanel Orientation="Horizontal" Margin="0,0,0,15">
+                        <TextBlock Text="已安装磁贴管理" FontSize="22" FontWeight="Bold" VerticalAlignment="Center" Margin="0,0,20,0"/>
+                        <Button Content="刷新列表" Click="BtnRefreshList_Click" Style="{StaticResource ButtonInfo}" Width="100"/>
+                        <TextBlock Text="* 此处仅显示通过本工具创建的磁贴" VerticalAlignment="Center" Opacity="0.6" Margin="15,0,0,0"/>
+                    </StackPanel>
+
+                    <ListView x:Name="ListInstalledTiles" Grid.Row="1" Background="{DynamicResource SecondaryRegionBrush}" BorderThickness="0" Style="{StaticResource ListView.Small}">
+                        <ListView.View>
+                            <GridView>
+                                <GridViewColumn Header="图标" Width="60">
+                                    <GridViewColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <Image Source="{Binding Icon}" Width="32" Height="32"/>
+                                        </DataTemplate>
+                                    </GridViewColumn.CellTemplate>
+                                </GridViewColumn>
+                                <GridViewColumn Header="磁贴 ID (包名)" Width="200" DisplayMemberBinding="{Binding Id}"/>
+                                <GridViewColumn Header="安装路径" Width="350" DisplayMemberBinding="{Binding Path}"/>
+                                <GridViewColumn Header="操作" Width="120">
+                                    <GridViewColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <Button Content="卸载/删除" Click="BtnUninstall_Click" Style="{StaticResource ButtonDashedDanger}" Height="30" Padding="10,0" Tag="{Binding}"/>
+                                        </DataTemplate>
+                                    </GridViewColumn.CellTemplate>
+                                </GridViewColumn>
+                            </GridView>
+                        </ListView.View>
+                    </ListView>
+                </Grid>
+
+                <!-- 页面4：关于应用 (已修复闭合标签问题) -->
+                <ScrollViewer x:Name="ViewAbout" Visibility="Collapsed">
+                    <StackPanel>
+                        <TextBlock Text="关于 TileGenerator" FontSize="22" FontWeight="Bold" Margin="0,0,0,15"/>
+
+                        <hc:Card BorderThickness="0" Effect="{DynamicResource EffectShadow2}" Background="{DynamicResource SecondaryRegionBrush}">
+                            <StackPanel Margin="30">
+                                <!-- 头部：Logo 和版本 -->
+                                <StackPanel HorizontalAlignment="Center" Margin="0,0,0,30">
+                                    <Border Width="80" Height="80" Background="{DynamicResource PrimaryBrush}" CornerRadius="15" Margin="0,0,0,15">
+                                        <TextBlock Text="TG" FontSize="36" FontWeight="Bold" Foreground="White" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                    </Border>
+                                    <TextBlock Text="Tile Generator" FontSize="24" FontWeight="Bold" HorizontalAlignment="Center"/>
+                                    <!-- 修改：背景改为主题色，确保文字可见 -->
+                                    <Border Background="{DynamicResource PrimaryBrush}" CornerRadius="4" Padding="8,2" Margin="0,5,0,0">
+                                        <TextBlock x:Name="VersionText" Text="v1.0.0" Foreground="White" FontSize="11" FontWeight="Bold"/>
+                                    </Border>
+                                </StackPanel>
+
+                                <hc:Divider LineStroke="{DynamicResource BorderBrush}" Margin="0,0,0,20"/>
+
+                                <!-- 作者寄语 -->
+                                <TextBlock Text="感谢使用 Tile Generator！" FontSize="16" FontWeight="Bold" HorizontalAlignment="Center" Margin="0,0,0,10"/>
+                                <TextBlock Text="这是一款完全免费的 Windows 磁贴美化工具。如果您觉得它好用，或者它帮助您打造了更漂亮的开始菜单，欢迎请作者喝杯咖啡，这将是我持续更新的最大动力！" 
+                                           FontSize="14" Foreground="{DynamicResource SecondaryTextBrush}" TextWrapping="Wrap" TextAlignment="Center" MaxWidth="600" LineHeight="24" Margin="0,0,0,30"/>
+
+                                <!-- 赞赏区域 -->
+                                <Grid HorizontalAlignment="Center">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="Auto"/>
+                                        <ColumnDefinition Width="40"/>
+                                        <ColumnDefinition Width="Auto"/>
+                                    </Grid.ColumnDefinitions>
+
+                                    <!-- 微信赞赏 -->
+                                    <StackPanel Grid.Column="0">
+                                        <Border CornerRadius="10" Effect="{DynamicResource EffectShadow2}" Background="White" Padding="5">
+                                            <Image Source="/Resources/wx.jpg" Width="200" Height="200" RenderOptions.BitmapScalingMode="HighQuality"/>
+                                        </Border>
+                                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,10,0,0">
+                                            <TextBlock Text="&#xE946;" FontFamily="Segoe MDL2 Assets" Foreground="#09BB07" VerticalAlignment="Center" Margin="0,0,5,0"/>
+                                            <TextBlock Text="微信赞赏" Foreground="#09BB07" FontWeight="Bold"/>
+                                        </StackPanel>
+                                    </StackPanel>
+
+                                    <!-- 支付宝赞赏 -->
+                                    <StackPanel Grid.Column="2">
+                                        <Border CornerRadius="10" Effect="{DynamicResource EffectShadow2}" Background="White" Padding="5">
+                                            <Image Source="/Resources/zfb.jpg" Width="200" Height="200" RenderOptions.BitmapScalingMode="HighQuality"/>
+                                        </Border>
+                                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,10,0,0">
+                                            <TextBlock Text="&#xE946;" FontFamily="Segoe MDL2 Assets" Foreground="#00A0E9" VerticalAlignment="Center" Margin="0,0,5,0"/>
+                                            <TextBlock Text="支付宝投食" Foreground="#00A0E9" FontWeight="Bold"/>
+                                        </StackPanel>
+                                    </StackPanel>
+                                </Grid>
+                            </StackPanel>
+                        </hc:Card>
+                    </StackPanel>
+                </ScrollViewer>
+            </Grid>
+        </Border>
+    </Grid>
+</hc:Window>
