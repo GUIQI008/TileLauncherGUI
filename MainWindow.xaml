@@ -305,20 +305,17 @@
                     </ListView>
                 </Grid>
 
-                <!-- 页面4：关于应用 (已修复闭合标签问题) -->
                 <ScrollViewer x:Name="ViewAbout" Visibility="Collapsed">
                     <StackPanel>
                         <TextBlock Text="关于 TileGenerator" FontSize="22" FontWeight="Bold" Margin="0,0,0,15"/>
 
                         <hc:Card BorderThickness="0" Effect="{DynamicResource EffectShadow2}" Background="{DynamicResource SecondaryRegionBrush}">
                             <StackPanel Margin="30">
-                                <!-- 头部：Logo 和版本 -->
                                 <StackPanel HorizontalAlignment="Center" Margin="0,0,0,30">
                                     <Border Width="80" Height="80" Background="{DynamicResource PrimaryBrush}" CornerRadius="15" Margin="0,0,0,15">
                                         <TextBlock Text="TG" FontSize="36" FontWeight="Bold" Foreground="White" HorizontalAlignment="Center" VerticalAlignment="Center"/>
                                     </Border>
                                     <TextBlock Text="Tile Generator" FontSize="24" FontWeight="Bold" HorizontalAlignment="Center"/>
-                                    <!-- 修改：背景改为主题色，确保文字可见 -->
                                     <Border Background="{DynamicResource PrimaryBrush}" CornerRadius="4" Padding="8,2" Margin="0,5,0,0">
                                         <TextBlock x:Name="VersionText" Text="v1.0.0" Foreground="White" FontSize="11" FontWeight="Bold"/>
                                     </Border>
@@ -328,7 +325,7 @@
 
                                 <!-- 作者寄语 -->
                                 <TextBlock Text="感谢使用 Tile Generator！" FontSize="16" FontWeight="Bold" HorizontalAlignment="Center" Margin="0,0,0,10"/>
-                                <TextBlock Text="这是一款完全免费的 Windows 磁贴美化工具。如果您觉得它好用，或者它帮助您打造了更漂亮的开始菜单，欢迎请作者喝杯咖啡，这将是我持续更新的最大动力！" 
+                                <TextBlock Text="这是一款完全免费的 Windows 磁贴美化工具。如果觉得它好用，或者它帮助了你，欢迎请作者喝杯咖啡，这将是我持续更新的最大动力！" 
                                            FontSize="14" Foreground="{DynamicResource SecondaryTextBrush}" TextWrapping="Wrap" TextAlignment="Center" MaxWidth="600" LineHeight="24" Margin="0,0,0,30"/>
 
                                 <!-- 赞赏区域 -->
