@@ -102,7 +102,6 @@
         <!-- 右侧内容区 -->
         <Border Grid.Column="1" Padding="20">
             <Grid>
-                <!-- 页面1：单应用生成 -->
                 <ScrollViewer x:Name="ViewSingleApp" Visibility="Visible">
                     <StackPanel>
                         <TextBlock Text="单应用磁贴配置" FontSize="22" FontWeight="Bold" Margin="0,0,0,15"/>
@@ -211,7 +210,6 @@
                     </StackPanel>
                 </ScrollViewer>
 
-                <!-- 页面2：拼图生成器 -->
                 <ScrollViewer x:Name="ViewPuzzle" Visibility="Collapsed">
                     <StackPanel>
                         <TextBlock Text="混合拼图生成器" FontSize="22" FontWeight="Bold" Margin="0,0,0,15"/>
@@ -268,7 +266,6 @@
                     </StackPanel>
                 </ScrollViewer>
 
-                <!-- 页面3：磁贴管理 -->
                 <Grid x:Name="ViewManage" Visibility="Collapsed">
                     <Grid.RowDefinitions>
                         <RowDefinition Height="Auto"/>
@@ -323,12 +320,10 @@
 
                                 <hc:Divider LineStroke="{DynamicResource BorderBrush}" Margin="0,0,0,20"/>
 
-                                <!-- 作者寄语 -->
                                 <TextBlock Text="感谢使用 Tile Generator！" FontSize="16" FontWeight="Bold" HorizontalAlignment="Center" Margin="0,0,0,10"/>
                                 <TextBlock Text="这是一款完全免费的 Windows 磁贴美化工具。如果觉得它好用，或者它帮助了你，欢迎请作者喝杯咖啡，这将是我持续更新的最大动力！" 
                                            FontSize="14" Foreground="{DynamicResource SecondaryTextBrush}" TextWrapping="Wrap" TextAlignment="Center" MaxWidth="600" LineHeight="24" Margin="0,0,0,30"/>
 
-                                <!-- 赞赏区域 -->
                                 <Grid HorizontalAlignment="Center">
                                     <Grid.ColumnDefinitions>
                                         <ColumnDefinition Width="Auto"/>
@@ -336,7 +331,6 @@
                                         <ColumnDefinition Width="Auto"/>
                                     </Grid.ColumnDefinitions>
 
-                                    <!-- 微信赞赏 -->
                                     <StackPanel Grid.Column="0">
                                         <Border CornerRadius="10" Effect="{DynamicResource EffectShadow2}" Background="White" Padding="5">
                                             <Image Source="/Resources/wx.jpg" Width="200" Height="200" RenderOptions.BitmapScalingMode="HighQuality"/>
@@ -347,7 +341,6 @@
                                         </StackPanel>
                                     </StackPanel>
 
-                                    <!-- 支付宝赞赏 -->
                                     <StackPanel Grid.Column="2">
                                         <Border CornerRadius="10" Effect="{DynamicResource EffectShadow2}" Background="White" Padding="5">
                                             <Image Source="/Resources/zfb.jpg" Width="200" Height="200" RenderOptions.BitmapScalingMode="HighQuality"/>
