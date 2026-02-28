@@ -2,7 +2,7 @@
 
 # TileLauncherGUI
 
-此工具专门为Win11设计，适合想在Win11上使用磁贴功能的用户，需要搭配 **[ExplorerPatcher](https://github.com/valinet/ExplorerPatcher)**使用的工具。
+此工具专门为Win11设计，适合想在Win11上使用磁贴功能的用户，需要搭配 [ExplorerPatcher](https://github.com/valinet/ExplorerPatcher)使用的工具。
 
 <aside>
 
