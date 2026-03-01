@@ -4,6 +4,9 @@ on:
   push:
     branches: [main]  # 每次 push 到 main 时触发
 
+permissions:
+  contents: write  # 授予创建 Release 的权限
+
 jobs:
   release:
     runs-on: ubuntu-latest
@@ -17,18 +20,20 @@ jobs:
       - name: Extract version from code
         id: extract_version
         run: |
+          # 假设文件路径是 src/UpdateManager.cs；调整为你的实际路径
           VERSION_FILE="UpdateManager.cs"
           if [ ! -f "$VERSION_FILE" ]; then
             echo "Error: Version file not found!"
             exit 1
           fi
+          # 使用 grep 和 sed 提取 CurrentVersion 的值（忽略空格）
           VERSION=$(grep -oP 'public const string CurrentVersion\s*=\s*"\K[^"]+' "$VERSION_FILE")
           if [ -z "$VERSION" ]; then
             echo "Error: Could not extract version!"
             exit 1
           fi
           echo "Extracted version: $VERSION"
-          echo "::set-output name=version::$VERSION"  # 输出版本号
+          echo "version=$VERSION" >> $GITHUB_OUTPUT  # 更新为新格式
 
       - name: Check if version changed
         id: check_version
@@ -36,9 +41,9 @@ jobs:
           LATEST_TAG=$(git describe --tags --abbrev=0 2>/dev/null || echo "v0.0.0")
           if [ "v${{ steps.extract_version.outputs.version }}" == "$LATEST_TAG" ]; then
             echo "Version unchanged, skipping release"
-            echo "::set-output name=skip::true"
+            echo "skip=true" >> $GITHUB_OUTPUT  # 更新为新格式
           else
-            echo "::set-output name=skip::false"
+            echo "skip=false" >> $GITHUB_OUTPUT  # 更新为新格式
           fi
 
       - name: Build ZIP
