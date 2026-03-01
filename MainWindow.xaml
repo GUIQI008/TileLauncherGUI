@@ -52,7 +52,6 @@
 
                 <TextBlock Text="TILE GENERATOR" FontWeight="Bold" FontSize="18" HorizontalAlignment="Center" Margin="0,20,0,20" Foreground="{DynamicResource PrimaryBrush}"/>
 
-                <!-- 统一使用 SelectionChanged 事件，去掉了单项的 Selected 事件以防报错 -->
                 <ListBox x:Name="NavList" Grid.Row="1" SelectionChanged="NavList_SelectionChanged" BorderThickness="0" Background="Transparent">
                     <ListBoxItem IsSelected="True" Height="50" Tag="Single">
                         <StackPanel Orientation="Horizontal">
@@ -127,11 +126,13 @@
                                         <ColumnDefinition Width="*"/>
                                         <ColumnDefinition Width="Auto"/>
                                     </Grid.ColumnDefinitions>
-                                    <StackPanel VerticalAlignment="Center">
-                                        <StackPanel Orientation="Horizontal" Margin="0,10,0,0" Height="121">
-                                            <Button x:Name="BtnSetImg" Content="选择图片" Click="BtnSetImg_Click" Style="{StaticResource ButtonPrimary}" Width="97" Margin="0,0,10,0" IsEnabled="False" VerticalAlignment="Center" Height="47"/>
-                                            <Button x:Name="BtnRemoveImg" Content="移除" Click="BtnRemoveImg_Click" Style="{StaticResource ButtonDashedDanger}" IsEnabled="False" Width="96" VerticalAlignment="Center" Height="48"/>
+                                    <StackPanel VerticalAlignment="Center" Margin="0,0,10,0">
+                                        <StackPanel Orientation="Horizontal" Margin="0,0,0,15">
+                                            <Button x:Name="BtnSetImg" Content="选择图片" Click="BtnSetImg_Click" Style="{StaticResource ButtonPrimary}" Width="97" Margin="0,0,10,0" IsEnabled="False" Height="47"/>
+                                            <Button x:Name="BtnRemoveImg" Content="移除" Click="BtnRemoveImg_Click" Style="{StaticResource ButtonDashedDanger}" IsEnabled="False" Width="96" Height="47"/>
                                         </StackPanel>
+                                        <!-- 新增：自动裁剪选项 -->
+                                        <CheckBox x:Name="ChkAutoCrop" Content="自动裁剪铺满 (推荐)" IsChecked="True" ToolTip="开启后将自动居中裁剪图片以填满磁贴，关闭则保留完整图片(可能产生留边)"/>
                                     </StackPanel>
                                     <Border Grid.Column="1" Background="#11000000" CornerRadius="8" Padding="15" Margin="20,0,0,0">
                                         <Grid>
@@ -140,37 +141,51 @@
                                                 <ColumnDefinition Width="8"/>
                                                 <ColumnDefinition Width="120"/>
                                             </Grid.ColumnDefinitions>
+
+                                            <!-- 大尺寸 310x310 -->
                                             <Button x:Name="BtnImgLarge" Grid.Column="0" Width="120" Height="120" VerticalAlignment="Top" Click="BtnTileSelect_Click" Tag="Large" Style="{StaticResource TilePreviewBtn}">
                                                 <Button.Background>
                                                     <ImageBrush Stretch="UniformToFill"/>
                                                 </Button.Background>
+                                                <TextBlock Text="310x310&#x0a;(大)" Foreground="{DynamicResource PrimaryTextBrush}" TextAlignment="Center" FontSize="13" Opacity="0.6"/>
                                             </Button>
+
                                             <Grid Grid.Column="2">
                                                 <Grid.RowDefinitions>
                                                     <RowDefinition Height="56"/>
                                                     <RowDefinition Height="8"/>
                                                     <RowDefinition Height="56"/>
                                                 </Grid.RowDefinitions>
+
+                                                <!-- 宽尺寸 310x150 -->
                                                 <Button x:Name="BtnImgWide" Grid.Row="0" Width="120" Height="56" Click="BtnTileSelect_Click" Tag="Wide" Style="{StaticResource TilePreviewBtn}">
                                                     <Button.Background>
                                                         <ImageBrush Stretch="UniformToFill"/>
                                                     </Button.Background>
+                                                    <TextBlock Text="310x150 (宽)" Foreground="{DynamicResource PrimaryTextBrush}" TextAlignment="Center" FontSize="13" Opacity="0.6"/>
                                                 </Button>
+
                                                 <Grid Grid.Row="2">
                                                     <Grid.ColumnDefinitions>
                                                         <ColumnDefinition Width="56"/>
                                                         <ColumnDefinition Width="8"/>
                                                         <ColumnDefinition Width="56"/>
                                                     </Grid.ColumnDefinitions>
+
+                                                    <!-- 主尺寸(中) 150x150 -->
                                                     <Button x:Name="BtnImgMaster" Grid.Column="0" Width="56" Height="56" Click="BtnTileSelect_Click" Tag="Master" Style="{StaticResource TilePreviewBtn}">
                                                         <Button.Background>
                                                             <ImageBrush Stretch="UniformToFill"/>
                                                         </Button.Background>
+                                                        <TextBlock Text="150x150&#x0a;(中)" Foreground="{DynamicResource PrimaryTextBrush}" TextAlignment="Center" FontSize="11" Opacity="0.6"/>
                                                     </Button>
+
+                                                    <!-- 小尺寸 71x71 -->
                                                     <Button x:Name="BtnImgSmall" Grid.Column="2" Width="26" Height="26" VerticalAlignment="Top" HorizontalAlignment="Right" Click="BtnTileSelect_Click" Tag="Small" Style="{StaticResource TilePreviewBtn}">
                                                         <Button.Background>
                                                             <ImageBrush Stretch="UniformToFill"/>
                                                         </Button.Background>
+                                                        <TextBlock Text="71" Foreground="{DynamicResource PrimaryTextBrush}" TextAlignment="Center" FontSize="10" Opacity="0.6"/>
                                                     </Button>
                                                 </Grid>
                                             </Grid>

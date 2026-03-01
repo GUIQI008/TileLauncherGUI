@@ -147,7 +147,8 @@ namespace TileLauncherGUI
                 StaticSmall = _imgSmallPath,
                 StaticWide = _imgWidePath,
                 StaticLarge = _imgLargePath,
-                EnableLiveTile = ChkEnableLive.IsChecked == true
+                EnableLiveTile = ChkEnableLive.IsChecked == true,
+                AutoCropToFill = ChkAutoCrop.IsChecked == true
             };
             foreach (var it in ListLiveImages.Items) cfg.LiveImages.Add(it.ToString()!);
 
@@ -385,7 +386,19 @@ namespace TileLauncherGUI
 
         public enum TileType { Mid, Wide, Large }
         public class PuzzleItem { public int Row; public int Col; public TileType Type; }
-        public class TileConfig { public string AppId = ""; public string? DisplayName; public string TargetPath = ""; public string Master = ""; public string? StaticSmall; public string? StaticWide; public string? StaticLarge; public bool EnableLiveTile; public List<string> LiveImages = new List<string>(); }
+        public class TileConfig
+        {
+            public string AppId = "";
+            public string? DisplayName;
+            public string TargetPath = "";
+            public string Master = "";
+            public string? StaticSmall;
+            public string? StaticWide;
+            public string? StaticLarge;
+            public bool EnableLiveTile;
+            public bool AutoCropToFill = true;
+            public List<string> LiveImages = new List<string>();
+        }
     }
 
     public static class TemplateModels
@@ -505,11 +518,28 @@ namespace MyLauncher
             using var mb = File.Exists(c.Master) ? LoadImg(c.Master) : new DrawingBitmap(512, 512);
             void S(string? p, int w, int h, string n)
             {
-                int tw = (int)(w*Scale), th = (int)(h*Scale); using var t = new DrawingBitmap(tw, th); using var g = DrawingGraphics.FromImage(t);
-                g.InterpolationMode = Drawing2D.InterpolationMode.HighQualityBicubic; g.CompositingQuality = Drawing2D.CompositingQuality.HighQuality; g.SmoothingMode = Drawing2D.SmoothingMode.HighQuality; g.PixelOffsetMode = Drawing2D.PixelOffsetMode.HighQuality;
+                int tw = (int)(w * Scale), th = (int)(h * Scale);
+                using var t = new DrawingBitmap(tw, th);
+                using var g = DrawingGraphics.FromImage(t);
+                g.InterpolationMode = Drawing2D.InterpolationMode.HighQualityBicubic;
+                g.CompositingQuality = Drawing2D.CompositingQuality.HighQuality;
+                g.SmoothingMode = Drawing2D.SmoothingMode.HighQuality;
+                g.PixelOffsetMode = Drawing2D.PixelOffsetMode.HighQuality;
                 using var s = (!string.IsNullOrEmpty(p) && File.Exists(p)) ? LoadImg(p) : (DrawingImage)mb.Clone();
-                float r = Math.Min((float)tw/s.Width, (float)th/s.Height); int dw = (int)(s.Width*r), dh = (int)(s.Height*r);
-                g.DrawImage(s, (tw-dw)/2, (th-dh)/2, dw, dh);
+
+                float r;
+                if (c.AutoCropToFill)
+                {
+                    r = Math.Max((float)tw / s.Width, (float)th / s.Height);
+                }
+                else
+                {
+                    r = Math.Min((float)tw / s.Width, (float)th / s.Height);
+                }
+
+                int dw = (int)(s.Width * r), dh = (int)(s.Height * r);
+                g.DrawImage(s, (tw - dw) / 2, (th - dh) / 2, dw, dh);
+
                 t.Save(Path.Combine(a, n), DrawingImageFormat.Png);
             }
             S(c.StaticSmall, 44, 44, "Square44x44Logo.png"); S(null, 50, 50, "StoreLogo.png"); S(c.StaticSmall, 71, 71, "SmallTile.png"); S(null, 150, 150, "Square150x150Logo.png"); S(c.StaticWide, 310, 150, "Wide310x150Logo.png"); S(c.StaticLarge, 310, 310, "Square310x310Logo.png"); S(c.StaticWide, 620, 300, "SplashScreen.png");
