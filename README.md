@@ -2,12 +2,11 @@
 
 # TileLauncherGUI
 
-此工具专门为Win11设计，适合想在Win11上使用磁贴功能的用户，需要搭配https://github.com/valinet/ExplorerPatcher使用的工具。
+此工具专门为Win11设计，适合想在Win11上使用磁贴功能的用户，需要搭配 [ExplorerPatcher](https://github.com/valinet/ExplorerPatcher)使用的工具。
 
 <aside>
-💡
 
-Win10也可以使用，不过并不推荐，因为Win有类似的工具并且表现要比本工具好不少，也不需要搭配ExplorerPatcher使用
+💡Win10也可以使用，不过并不推荐，因为Win有类似的工具并且表现要比本工具好不少，也不需要搭配ExplorerPatcher使用
 
 </aside>
 
@@ -34,9 +33,8 @@ Win10也可以使用，不过并不推荐，因为Win有类似的工具并且表
        一键创建磁贴
 
 <aside>
-💡
 
-在该模式下按住鼠标右键缩放滚轮可对导入的图片进行位置、大小调节
+💡在该模式下按住鼠标右键缩放滚轮可对导入的图片进行位置、大小调节
 
 </aside>
 
